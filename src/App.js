@@ -4,9 +4,12 @@ import Footer from './components/layout/Footer';
 import Home from './pages/Home';
 import About from './pages/About';
 import NotFound from './pages/NotFound';
+import { GithupProvider } from './context/githup/GithupContext';
+
 
 function App() {
   return (
+    <GithupProvider>
     <Router>
       <div className='flex flex-col justify-between h-screen'>
         <Navbar />
@@ -21,6 +24,7 @@ function App() {
         <Footer/>
       </div>
     </Router>
+    </GithupProvider>
   );
 }
 
