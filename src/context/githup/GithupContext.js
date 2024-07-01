@@ -1,4 +1,5 @@
-import { createContext,useState } from "react";
+import { createContext,useReducer } from "react";
+import githubReducer from "./GithupReducer";
 
 
 const GithupContext = createContext();
@@ -7,19 +8,22 @@ const GITHUP_API = "https://api.github.com/users";
 
 
 export const GithupProvider = ({ children }) => {
-  const [users,setUsers]=useState([])
-  const [loading,setLoading]=useState(true)
+  const initialState = {
+    users: [],
+    loading: true,
+  };
+
+  const [state, dispatch] = useReducer(githubReducer, initialState);
 
   const fetchUsers = async () => {
     const res=await fetch ('https://api.github.com/users')
     const data=await res.json()
 
-    setUsers(data)
-    setLoading(false)
+    dispatch({type:'GET_USERS',payload:data})
 
   }
 
-  return <GithupContext.Provider value={{users,loading,fetchUsers}}>{children}</GithupContext.Provider>;
+  return <GithupContext.Provider value={{users:state.users,loading:state.loading,fetchUsers}}>{children}</GithupContext.Provider>;
 }
 
 export default GithupContext;
