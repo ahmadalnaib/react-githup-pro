@@ -13,19 +13,22 @@ export const GithupProvider = ({ children }) => {
 
   const [state, dispatch] = useReducer(githubReducer, initialState);
 
-  const fetchUsers = async () => {
+  const searchUsers = async (text) => {
     setLoading();
-    const res = await fetch('https://api.github.com/users');
-    const data = await res.json();
+    const params=new URLSearchParams({
+      q: text
+    })
+    const res = await fetch(`https://api.github.com/search/users?${params}`);
+    const {items} = await res.json();
 
-    dispatch({ type: 'GET_USERS', payload: data });
+    dispatch({ type: 'GET_USERS', payload: items });
   };
 
   const setLoading = () => dispatch({ type: 'SET_LOADING' });
 
   return (
     <GithupContext.Provider
-      value={{ users: state.users, loading: state.loading, fetchUsers }}
+      value={{ users: state.users, loading: state.loading, searchUsers }}
     >
       {children}
     </GithupContext.Provider>
